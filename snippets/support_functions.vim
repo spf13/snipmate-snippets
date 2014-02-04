@@ -23,6 +23,18 @@ function! Snippet_RubySpecNameFromFilename(...)
     return Snippet_Camelcase(name)
 endfunction
 
+function! Snippet_RubySpecNameFromFilename(...)
+    let name = substitute(expand("%:t:r"), '_spec$', '', '')
+    if len(name) == 0
+        if a:0 == 0
+            let name = 'MyClass'
+        else
+            let name = a:1
+        endif
+    endif
+    return Snippet_Camelcase(name)
+endfunction
+
 function! Snippet_MigrationNameFromFilename(...)
     let name = substitute(expand("%:t:r"), '^.\{-}_', '', '')
     if len(name) == 0
@@ -94,6 +106,21 @@ function! Snippet_JavaInstanceVarType(name)
     return "<+type+>"
 endfunction
 
+" actionscript {{{1
+function! Snippet_ActionScriptPackageFromPath()
+    let dir = split(expand("%:p"), "/")
+    let target_index = 0
+    let last_index = -1
+    while 1
+        let last_index = index(dir, "src", last_index+1, 1)
+        if last_index != -1
+            let target_index = last_index
+        else
+            break
+        endif
+    endwhile
+    return join(dir[(target_index+1) : -2], '.')
+endfunction
 
 "global {{{1
 function! s:start_comment()
